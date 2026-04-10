@@ -375,7 +375,7 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
       )}
 
       {/* Mobile bottom navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[200]" style={{ backgroundColor: '#F5F2EC', borderTop: '1px solid #E6DED3' }}>
         <div className="flex items-center justify-around py-2">
           {mainNav.map((item) => {
             const isActive = currentView === item.id;

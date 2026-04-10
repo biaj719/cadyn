@@ -46,7 +46,7 @@ export function PageContent({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
       flex: 1,
-      padding: '24px 32px 40px',
+      padding: '24px 32px 100px',
     }}>
       {children}
     </div>
