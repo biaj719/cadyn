@@ -35,7 +35,7 @@ export default function LoginPage() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setError(error.message);
-      else window.location.href = "/trips";
+      else window.location.href = "/";
     }
     setLoading(false);
   };
