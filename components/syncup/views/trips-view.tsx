@@ -1,7 +1,9 @@
 "use client";
 
+import 'leaflet/dist/leaflet.css';
 import { mockTrip, formatDateRange, getDaysUntilTrip, getNextTask, getUserTaskProgress } from "@/lib/mock-data";
 import { MapPin, Plus, Calendar, Users, ArrowRight } from "lucide-react";
+import { TripMap } from "../trip-map";
 
 interface TripsViewProps {
   onSelectTrip: () => void;
@@ -49,67 +51,22 @@ export function TripsView({ onSelectTrip, onOpenJoinCreateDialog }: TripsViewPro
         borderRadius: '16px',
         border: '1px solid #E6DED3',
         marginBottom: '28px',
-        position: 'relative',
         overflow: 'hidden',
-        height: '240px',
-        pointerEvents: 'none',
       }}>
-        <svg
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-          viewBox="0 0 1000 240"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <linearGradient id="hero-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{ stopColor: '#F5F0E8', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: '#EFE9E0', stopOpacity: 1 }} />
-            </linearGradient>
-            <pattern id="topo" patternUnits="userSpaceOnUse" width="200" height="240">
-              <path d="M0,60 Q50,50 100,60 T200,60" fill="none" stroke="#2F6F5A" strokeWidth="0.4" opacity="0.06" />
-              <path d="M0,120 Q50,110 100,120 T200,120" fill="none" stroke="#2F6F5A" strokeWidth="0.4" opacity="0.05" />
-              <path d="M0,180 Q50,170 100,180 T200,180" fill="none" stroke="#2F6F5A" strokeWidth="0.4" opacity="0.04" />
-            </pattern>
-          </defs>
-          <rect width="1000" height="240" fill="url(#hero-bg)" />
-          <rect width="1000" height="240" fill="url(#topo)" />
-          <g>
-            <circle cx="750" cy="80" r="10" fill="#2F6F5A" opacity="0.12" />
-            <circle cx="750" cy="80" r="5" fill="#2F6F5A" opacity="0.5" />
-            <circle cx="750" cy="80" r="2.5" fill="#FFFFFF" opacity="0.9" />
-          </g>
-          <g>
-            <circle cx="200" cy="140" r="10" fill="#2F6F5A" opacity="0.12" />
-            <circle cx="200" cy="140" r="5" fill="#2F6F5A" opacity="0.5" />
-            <circle cx="200" cy="140" r="2.5" fill="#FFFFFF" opacity="0.9" />
-          </g>
-          <g>
-            <circle cx="550" cy="180" r="10" fill="#2F6F5A" opacity="0.12" />
-            <circle cx="550" cy="180" r="5" fill="#2F6F5A" opacity="0.5" />
-            <circle cx="550" cy="180" r="2.5" fill="#FFFFFF" opacity="0.9" />
-          </g>
-        </svg>
-
-        {/* Text overlay */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          padding: '24px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          pointerEvents: 'none',
-        }}>
+        <TripMap
+          height="220px"
+          pins={[
+            { lat: 22.8905, lng: -109.9167, name: "Cabo Trip 2026" },
+          ]}
+        />
+        <div style={{ padding: '16px 20px', borderTop: '1px solid #E6DED3', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#1F1F1F', marginBottom: '4px' }}>
-              Your Travel Life
-            </h2>
-            <p style={{ fontSize: '13px', color: '#8A847C' }}>3 trips · 20 experiences</p>
+            <div style={{ fontSize: '15px', fontWeight: 700, color: '#1F1F1F' }}>Your Travel Life</div>
+            <div style={{ fontSize: '12px', color: '#8A847C', marginTop: '2px' }}>3 trips · 20 experiences</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Calendar size={13} color="#2F6F5A" />
-            <span style={{ fontSize: '13px', fontWeight: 500, color: '#2F6F5A' }}>
-              Next trip in {daysLeft} days
-            </span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2F6F5A" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span style={{ fontSize: '12px', fontWeight: 500, color: '#2F6F5A' }}>Next trip in {daysLeft} days</span>
           </div>
         </div>
       </div>

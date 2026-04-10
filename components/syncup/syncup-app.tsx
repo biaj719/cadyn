@@ -275,12 +275,15 @@ export function CadynApp() {
           />
         );
       case "trip-overview":
-        return <TripOverviewView 
+        return <TripOverviewView
           onHouseholdSelect={handleHouseholdSelect}
           onItemSelect={handleItemSelect}
           getRequiredTaskStatus={getRequiredTaskStatus}
           getActivityResponse={getActivityResponse}
           updateActivityResponse={updateActivityResponse}
+          onNavigate={handleNavigate}
+          onBack={handleBackToTrips}
+          onTaskSelect={handleTaskSelect}
         />;
       case "my-plan":
         return <MyPlanView 

@@ -83,9 +83,24 @@ export const colors = {
 
   // Semantic aliases
   primary: '#3D5C50',
-  accent: '#2F6F5A',
   muted: '#EFE9E0',
   mutedForeground: '#8A847C',
+
+  // Icon color system
+  iconOverviewBg: '#DDE8E2',
+  iconOverviewFg: '#2A5E49',
+  iconOverviewActiveBg: '#C8D8D0',
+  iconOverviewActiveFg: '#1E4A38',
+  iconPlanBg: '#E8E0D4',
+  iconPlanFg: '#6B4E2E',
+  iconGroupsBg: '#E6E2DC',
+  iconGroupsFg: '#5C5347',
+  iconWalletBg: '#F0E2D4',
+  iconWalletFg: '#8C4F32',
+  iconActivityBg: '#DDE5E1',
+  iconActivityFg: '#3D6B58',
+  accent: '#5C7A9E',
+  accentSoft: '#E4EBF3',
 } as const;
 
 // =============================================================================

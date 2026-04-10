@@ -51,9 +51,9 @@ interface TripOverviewViewProps {
   onNavigate: (view: string) => void;
   onHouseholdSelect?: (household: Household) => void;
   onConfigureTrip?: () => void;
-  isOrganizer?: boolean;
   getRequiredTaskStatus?: (task: Task) => "not-started" | "in-progress" | "completed";
   getActivityResponse?: (activityId: string) => "no-response" | "going" | "not-going";
+  onTaskSelect?: (task: Task) => void;
 }
 
 export function TripOverviewView({ 
@@ -61,9 +61,9 @@ export function TripOverviewView({
   onNavigate, 
   onHouseholdSelect,
   onConfigureTrip,
-  isOrganizer = false,
   getRequiredTaskStatus,
   getActivityResponse,
+  onTaskSelect,
 }: TripOverviewViewProps) {
   const [departureDate, setDepartureDate] = useState<string | null>(null);
   const [daysUntilTrip, setDaysUntilTrip] = useState<number | null>(null);
@@ -183,6 +183,7 @@ export function TripOverviewView({
                   icon={<Sparkles className="h-6 w-6 text-foreground" />}
                   title={nextTask.title}
                   description={nextTask.description}
+                  onClick={() => onNavigate("my-plan")}
                 >
                   <div style={{ marginBottom: spacing['4'] }}>
                     <p style={{ ...textRoles.meta, marginBottom: spacing['2'] }}>
@@ -191,7 +192,13 @@ export function TripOverviewView({
                   </div>
                   <Button
                     className="bg-[#3D5C50] hover:bg-[#355649] text-white rounded-[14px] px-6 py-3 shadow-[0_1px_3px_rgba(0,0,0,0.08)] font-medium text-sm inline-flex items-center gap-2"
-                    onClick={() => onNavigate("my-plan")}
+                    onClick={() => {
+                      if (onTaskSelect && nextTask) {
+                        onTaskSelect(nextTask);
+                      } else {
+                        onNavigate("my-plan");
+                      }
+                    }}
                   >
                     {nextTask.status === "in-progress" ? "Continue" : "Get Started"}
                     <ArrowRight className="h-4 w-4" />
@@ -228,7 +235,7 @@ export function TripOverviewView({
                 boxShadow: shadows.sm,
                 padding: '20px',
                 transition: 'all 0.2s ease',
-              }} 
+              }}
               className="hover:border-textMuted/30"
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: spacing['5'] }}>
@@ -250,16 +257,16 @@ export function TripOverviewView({
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="text-center">
-                    <p style={{ fontSize: '28px', fontWeight: 600, color: statStyles.colors.success, marginBottom: statStyles.large.marginBottom }}>{taskCounts.completed}</p>
+                  <div style={{ background: '#E3EFE9', borderRadius: '8px', padding: '10px 4px', textAlign: 'center' }}>
+                    <p style={{ fontSize: '28px', fontWeight: 600, color: '#2F6F5A', marginBottom: statStyles.large.marginBottom }}>{taskCounts.completed}</p>
                     <p style={textRoles.label}>Done</p>
                   </div>
-                  <div className="text-center">
-                    <p style={{ fontSize: '28px', fontWeight: 600, color: statStyles.colors.warning, marginBottom: statStyles.large.marginBottom }}>{taskCounts.inProgress}</p>
+                  <div style={{ background: '#F6E7D8', borderRadius: '8px', padding: '10px 4px', textAlign: 'center' }}>
+                    <p style={{ fontSize: '28px', fontWeight: 600, color: '#D98E4F', marginBottom: statStyles.large.marginBottom }}>{taskCounts.inProgress}</p>
                     <p style={textRoles.label}>In Progress</p>
                   </div>
-                  <div className="text-center">
-                    <p style={{ fontSize: '28px', fontWeight: 600, color: statStyles.colors.muted, marginBottom: statStyles.large.marginBottom }}>{taskCounts.notStarted}</p>
+                  <div style={{ background: '#EFE9E0', borderRadius: '8px', padding: '10px 4px', textAlign: 'center' }}>
+                    <p style={{ fontSize: '28px', fontWeight: 600, color: '#8A847C', marginBottom: statStyles.large.marginBottom }}>{taskCounts.notStarted}</p>
                     <p style={textRoles.label}>Pending</p>
                   </div>
                 </div>
@@ -271,11 +278,11 @@ export function TripOverviewView({
                   <CheckCircle size={14} color="#8E8E93" />
                   <span style={textRoles.label}>WHO&apos;S READY</span>
                 </div>
-                <div style={{ 
-                  backgroundColor: colors.card, 
-                  borderRadius: borderRadius['2xl'], 
-                  border: `1px solid ${colors.border}`,
-                  boxShadow: shadows.sm,
+                <div style={{
+                  backgroundColor: colors.card,
+                  borderRadius: borderRadius['2xl'],
+                  border: '1px solid #C8BFB5',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
                   overflow: 'hidden',
                   transition: 'all 0.2s ease',
                 }}
@@ -314,14 +321,24 @@ export function TripOverviewView({
                           padding: spacing['4'],
                           borderBottom: index < mockTrip.households.slice(0, 4).length - 1 ? `1px solid ${colors.border}` : 'none',
                           transition: 'all 0.15s ease',
+                          backgroundColor: hhCompleted === 0 ? '#FFF8F3' : hhCompleted === hhTotal ? '#F4FAF7' : 'transparent',
                         }}
                         className="hover:bg-foreground/2 active:bg-foreground/4"
                       >
-                        <div style={{ flex: 1 }}>
-                          <span style={{ ...textRoles.title, display: 'block', marginBottom: spacing['1'] }}>{household.name}</span>
-                          <span style={textRoles.meta}>
-                            {statusText}
-                          </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+                          <div style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            flexShrink: 0,
+                            backgroundColor: hhCompleted === 0 ? '#E8A838' : hhCompleted === hhTotal ? '#2F6F5A' : '#2F6F5A',
+                          }} />
+                          <div>
+                            <span style={{ ...textRoles.title, display: 'block', marginBottom: spacing['1'] }}>{household.name}</span>
+                            <span style={{ ...textRoles.meta, color: hhCompleted === 0 ? '#D98E4F' : hhCompleted === hhTotal ? '#2F6F5A' : colors.textMuted }}>
+                              {statusText}
+                            </span>
+                          </div>
                         </div>
                         <span style={{ fontSize: listRowStyles.value.fontSize, fontWeight: listRowStyles.value.fontWeight, color: ratioColor, flexShrink: 0 }}>
                           {hhCompleted}/{hhTotal}
@@ -329,8 +346,8 @@ export function TripOverviewView({
                       </div>
                     );
 
-                    // If organizer and can interact, wrap in clickable container
-                    if (isOrganizer && onHouseholdSelect) {
+                    // If can interact, wrap in clickable container
+                    if (onHouseholdSelect) {
                       return (
                         <button
                           key={household.id}
@@ -350,13 +367,14 @@ export function TripOverviewView({
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Your Progress */}
-              <div style={{
+              <div onClick={() => onNavigate("my-plan")} style={{
                 backgroundColor: colors.card,
                 borderRadius: borderRadius['2xl'],
                 border: `1px solid ${colors.border}`,
                 boxShadow: shadows.sm,
                 padding: '20px',
                 transition: 'all 0.2s ease',
+                cursor: 'pointer',
               }}
               className="hover:border-textMuted/30"
               >
@@ -396,13 +414,14 @@ export function TripOverviewView({
               </div>
 
               {/* Your Savings */}
-              <div style={{
-                backgroundColor: colors.card,
+              <div onClick={() => onNavigate("wallet")} style={{
+                backgroundColor: '#F0F7F4',
                 borderRadius: borderRadius['2xl'],
-                border: `1px solid ${colors.border}`,
+                border: '1px solid #C8DDD4',
                 boxShadow: shadows.sm,
                 padding: '20px',
                 transition: 'all 0.2s ease',
+                cursor: 'pointer',
               }}
               className="hover:border-textMuted/30"
               >

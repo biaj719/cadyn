@@ -27,11 +27,11 @@ interface AppShellProps {
 }
 
 const mainNav = [
-  { id: "trip-overview" as View, label: "Overview", icon: Home },
-  { id: "my-plan" as View, label: "My Plan", icon: CheckSquare },
-  { id: "groups" as View, label: "Groups", icon: Users },
-  { id: "wallet" as View, label: "Wallet", icon: PiggyBank },
-  { id: "activity" as View, label: "Activity", icon: Activity },
+  { id: "trip-overview" as View, label: "Overview", icon: Home, bg: '#DDE8E2', fg: '#2A5E49', activeBg: '#C8D8D0', activeFg: '#1E4A38' },
+  { id: "my-plan" as View, label: "My Plan", icon: CheckSquare, bg: '#E8E0D4', fg: '#6B4E2E', activeBg: '#E8E0D4', activeFg: '#6B4E2E' },
+  { id: "groups" as View, label: "Groups", icon: Users, bg: '#E6E2DC', fg: '#5C5347', activeBg: '#E6E2DC', activeFg: '#5C5347' },
+  { id: "wallet" as View, label: "Wallet", icon: PiggyBank, bg: '#F0E2D4', fg: '#8C4F32', activeBg: '#F0E2D4', activeFg: '#8C4F32' },
+  { id: "activity" as View, label: "Activity", icon: Activity, bg: '#DDE5E1', fg: '#3D6B58', activeBg: '#DDE5E1', activeFg: '#3D6B58' },
 ];
 
 export function AppShell({ children, currentView, onNavigate, tripName }: AppShellProps) {
@@ -87,7 +87,14 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <div style={{
+                    width: '28px', height: '28px', borderRadius: '7px',
+                    background: isActive ? item.activeBg : item.bg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    <item.icon style={{ width: '14px', height: '14px' }} color={isActive ? item.activeFg : item.fg} />
+                  </div>
                   {item.label}
                 </button>
               );
@@ -386,12 +393,19 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
                 onClick={() => onNavigate(item.id)}
                 className={cn(
                   "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors",
-                  isActive 
-                    ? "text-primary" 
+                  isActive
+                    ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                <div style={{
+                  width: '28px', height: '28px', borderRadius: '7px',
+                  background: isActive ? item.activeBg : item.bg,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <item.icon style={{ width: '16px', height: '16px' }} color={isActive ? item.activeFg : item.fg} />
+                </div>
                 <span className="text-xs font-medium">{item.label}</span>
               </button>
             );
