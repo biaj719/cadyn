@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { CadynLogo } from "@/components/cadyn-logo";
 
@@ -10,6 +10,14 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  useEffect(() => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        // User is in password recovery mode - ready to update
+      }
+    });
+  }, []);
+
   const handleReset = async () => {
     setLoading(true);
     setError(null);
@@ -17,7 +25,7 @@ export default function ResetPasswordPage() {
     if (error) setError(error.message);
     else {
       setMessage("Password updated. Redirecting...");
-      setTimeout(() => { window.location.href = "/"; }, 2000);
+      setTimeout(() => { window.location.href = "/login"; }, 2000);
     }
     setLoading(false);
   };
