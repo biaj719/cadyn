@@ -154,7 +154,7 @@ export function SharedDetailView({
         onBack={onBack}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div style={{ padding: '24px 32px 100px' }}>
         <div className="space-y-6">
           {/* Your Status - Always First */}
           <Card className={`border-2 p-6 sm:p-8 ${isActivity
