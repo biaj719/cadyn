@@ -51,54 +51,66 @@ export function PrimaryCard({
 }: UniversalCardProps & { children?: React.ReactNode; label?: string }) {
   return (
     <div
-      style={{ 
-        backgroundColor: colors.card, 
-        borderRadius: borderRadius['2xl'],
-        border: `1px solid ${colors.border}`,
-        boxShadow: shadows.sm, 
-        padding: '24px',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      }}
       onClick={onClick}
-      className="hover:border-textMuted/30 hover:shadow-md"
+      style={{
+        background: '#F0F7F4',
+        border: '1px solid #C8DDD4',
+        borderRadius: '16px',
+        padding: '24px',
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'all 0.2s ease',
+        boxShadow: '0 2px 8px rgba(44,95,74,0.08)',
+      }}
     >
+      {label && (
+        <p style={{
+          fontSize: '10px',
+          fontWeight: 700,
+          letterSpacing: '0.09em',
+          textTransform: 'uppercase',
+          color: '#4A7A62',
+          marginBottom: '14px',
+        }}>
+          {label}
+        </p>
+      )}
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '16px' }}>
         <div style={{
-          backgroundColor: colors.iconContainerBg,
-          borderRadius: borderRadius.lg,
+          backgroundColor: '#D0E8DF',
+          borderRadius: '12px',
           padding: '10px',
           flexShrink: 0,
           alignSelf: 'flex-start',
-          marginTop: '4px',
-          width: '48px',
-          height: '48px',
+          marginTop: '2px',
+          width: '52px',
+          height: '52px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}>
-          <div style={{ transform: 'scale(1.3)' }}>
+          <div style={{ transform: 'scale(1.2)' }}>
             {icon}
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }} className="min-w-0">
-          {label && (
-            <p style={{ 
-              fontSize: sectionHeaderStyles.fontSize, 
-              fontWeight: sectionHeaderStyles.fontWeight, 
-              letterSpacing: sectionHeaderStyles.letterSpacing, 
-              textTransform: sectionHeaderStyles.textTransform, 
-              color: sectionHeaderStyles.color,
-              marginBottom: spacing['1']
-            }}>
-              {label}
-            </p>
-          )}
-          <h3 style={{ fontSize: typography.fontSize['2xl'], fontWeight: typography.fontWeight.bold, color: colors.textPrimary, marginBottom: spacing['3'] }}>
+          <h3 style={{
+            fontSize: '20px',
+            fontWeight: 700,
+            color: '#1F1F1F',
+            marginBottom: '6px',
+            lineHeight: 1.2,
+          }}>
             {title}
           </h3>
           {description && (
-            <p style={{ fontSize: typography.fontSize.xl, color: colors.textMuted, marginBottom: spacing['6'] }}>{description}</p>
+            <p style={{
+              fontSize: '14px',
+              color: '#6F6A63',
+              marginBottom: '16px',
+              lineHeight: 1.5,
+            }}>
+              {description}
+            </p>
           )}
           {badges && badges.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap mb-3">
@@ -106,7 +118,7 @@ export function PrimaryCard({
             </div>
           )}
           {children && (
-            <div style={{ width: 'fit-content', minWidth: '140px' }}>
+            <div>
               {children}
             </div>
           )}

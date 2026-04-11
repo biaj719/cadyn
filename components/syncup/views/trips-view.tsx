@@ -119,17 +119,20 @@ export function TripsView({ onSelectTrip, onOpenJoinCreateDialog }: TripsViewPro
             position: 'relative',
             overflow: 'hidden',
           }}>
-            <img
-              src="https://staticmap.openstreetmap.de/staticmap.php?center=22.8905,-109.9167&zoom=8&size=600x200&maptype=mapnik"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                pointerEvents: 'none',
-                opacity: 0.85,
-              }}
-              alt="Trip map"
-            />
+            <div style={{
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(135deg, #E3EFE9 0%, #F0F7F4 50%, #EAF3EE 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+            }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C8DDD4" strokeWidth="1" strokeLinecap="round">
+                <circle cx="12" cy="10" r="3"/>
+                <path d="M12 2a8 8 0 00-8 8c0 5.33 8 12 8 12s8-6.67 8-12a8 8 0 00-8-8z"/>
+              </svg>
+            </div>
             <span style={{
               position: 'absolute',
               top: '12px',

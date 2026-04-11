@@ -1,5 +1,5 @@
 import type { Activity } from "@/lib/mock-data";
-import { Bell, Check, MessageCircle, Sparkles, AlertCircle } from "lucide-react";
+import { Bell, Check, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
 
 interface ActivityItemProps {
   activity: Activity;
@@ -16,7 +16,7 @@ const typeConfig = {
     className: "bg-sky-100 text-sky-700",
   },
   milestone: {
-    icon: Sparkles,
+    icon: CheckCircle2,
     className: "bg-emerald-100 text-emerald-700",
   },
   nudge: {

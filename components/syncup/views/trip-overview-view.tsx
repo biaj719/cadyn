@@ -105,6 +105,7 @@ export function TripOverviewView({
   const nextTask = userPendingTasks[0] || null;
 
   const progressRingValue = userTotalTasks > 0 ? Math.round((userCompletedTasks / userTotalTasks) * 100) : 0;
+  const userRole = typeof window !== 'undefined' ? localStorage.getItem('cadyn_role') || 'attendee' : 'attendee';
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colors.background }}>
@@ -115,6 +116,22 @@ export function TripOverviewView({
       />
 
       <PageContent>
+        <div style={{
+          background: '#F0F7F4',
+          border: '1px solid #C8DDD4',
+          borderRadius: '12px',
+          padding: '14px 16px',
+          marginBottom: '20px',
+        }}>
+          <div style={{ fontSize: '13px', fontWeight: 700, color: '#1F1F1F', marginBottom: '4px' }}>
+            {userRole === 'organizer' ? "You're organizing this trip" : "Welcome to your trip"}
+          </div>
+          <div style={{ fontSize: '12px', color: '#4A7A62', lineHeight: 1.5 }}>
+            {userRole === 'organizer'
+              ? "Track your group's progress and keep things moving."
+              : "Bianca set up your trip plan. Head to My Plan to see what you need to do next."}
+          </div>
+        </div>
         <div className="space-y-8">
           {/* 1. CURRENT TRIP SECTION - Structured planning area starts here */}
           <div style={{
@@ -185,13 +202,13 @@ export function TripOverviewView({
                   description={nextTask.description}
                   onClick={() => onNavigate("my-plan")}
                 >
-                  <div style={{ marginBottom: spacing['4'] }}>
-                    <p style={{ ...textRoles.meta, marginBottom: spacing['2'] }}>
+                  <div style={{ marginBottom: spacing['2'] }}>
+                    <p style={{ ...textRoles.meta, marginBottom: spacing['1'] }}>
                       {taskCounts.completed} of {taskCounts.completed + taskCounts.inProgress + taskCounts.notStarted} groups have completed this — you&apos;re helping us stay on track.
                     </p>
                   </div>
                   <Button
-                    className="bg-[#3D5C50] hover:bg-[#355649] text-white rounded-[14px] px-6 py-3 shadow-[0_1px_3px_rgba(0,0,0,0.08)] font-medium text-sm inline-flex items-center gap-2"
+                    className="bg-[#3D5C50] hover:bg-[#355649] text-white rounded-[12px] px-5 py-2.5 font-medium text-sm inline-flex items-center gap-2"
                     onClick={() => {
                       if (onTaskSelect && nextTask) {
                         onTaskSelect(nextTask);
@@ -200,7 +217,7 @@ export function TripOverviewView({
                       }
                     }}
                   >
-                    {nextTask.status === "in-progress" ? "Continue" : "Get Started"}
+                    {"Continue"}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </PrimaryCard>

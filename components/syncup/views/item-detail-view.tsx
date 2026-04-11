@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "../page-header";
 import { mockTrip, getCurrentUserHousehold } from "@/lib/mock-data";
 import { 
-  Plane, 
-  Building2, 
+  Plane,
+  BedDouble,
+  Compass,
   Shield,
   CheckCircle2,
   Clock,
@@ -32,7 +33,7 @@ const itemConfig = {
     notes: "Departing June 15 from LAX at 8:45 AM, returning June 22 at 6:30 PM. All travelers on same flights.",
   },
   hotel: {
-    icon: Building2,
+    icon: BedDouble,
     title: "Hotel",
     description: "Beachfront resort accommodation",
     notes: "Beachfront Ocean Resort, Cabo San Lucas. Check-in June 15 after 3 PM, check-out June 22 before 11 AM.",
@@ -44,7 +45,7 @@ const itemConfig = {
     notes: "Coverage includes trip cancellation, medical emergencies, and baggage protection. Deadline: May 15, 2026.",
   },
   activity: {
-    icon: CheckCircle2,
+    icon: Compass,
     title: "Snorkeling Tour",
     description: "Guided reef exploration activity",
     notes: "Group discount available. Tour operates daily 9 AM - 2 PM. 4-hour tour with lunch included.",

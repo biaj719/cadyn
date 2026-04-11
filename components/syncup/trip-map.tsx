@@ -40,7 +40,7 @@ export function TripMap({ pins, height = "240px" }: TripMapProps) {
     });
 
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
       { maxZoom: 19 }
     ).addTo(map);
 
@@ -59,13 +59,7 @@ export function TripMap({ pins, height = "240px" }: TripMapProps) {
 
     pins.forEach(pin => {
       L.marker([pin.lat, pin.lng], { icon: greenIcon })
-        .addTo(map)
-        .bindTooltip(pin.name, {
-          permanent: true,
-          direction: "top",
-          offset: [0, -10],
-          className: "cadyn-tooltip",
-        });
+        .addTo(map);
     });
 
     if (pins.length === 1) {
@@ -98,22 +92,6 @@ export function TripMap({ pins, height = "240px" }: TripMapProps) {
   }, [height]);
 
   return (
-    <>
-      <style>{`
-        .cadyn-tooltip {
-          background: #FFFCF8;
-          border: 1px solid #E6DED3;
-          border-radius: 8px;
-          padding: 4px 10px;
-          font-size: 12px;
-          font-weight: 500;
-          color: #1F1F1F;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-          white-space: nowrap;
-        }
-        .cadyn-tooltip::before { display: none; }
-      `}</style>
-      <div ref={mapRef} style={{ height, width: "100%", borderRadius: "12px", overflow: "hidden" }} />
-    </>
+    <div ref={mapRef} style={{ height, width: "100%", borderRadius: "12px", overflow: "hidden", filter: "saturate(0.9) contrast(0.95)" }} />
   );
 }

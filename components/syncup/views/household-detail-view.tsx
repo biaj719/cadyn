@@ -13,8 +13,9 @@ import {
   Bell,
   CheckCircle2,
   Plane,
-  Building2,
+  BedDouble,
   Shield,
+  Compass,
   Check,
 } from "lucide-react";
 
@@ -26,9 +27,10 @@ interface HouseholdDetailViewProps {
 
 const categoryIcons = {
   flights: Plane,
-  hotel: Building2,
+  hotel: BedDouble,
   insurance: Shield,
-  other: CheckCircle2,
+  activity: Compass,
+  other: Compass,
 };
 
 export function HouseholdDetailView({ household, onBack, isOrganizer = false }: HouseholdDetailViewProps) {

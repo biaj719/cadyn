@@ -48,7 +48,15 @@ interface ActivityFeedItem {
 }
 
 export function CadynApp() {
-  const [currentView, setCurrentView] = useState<View>("trips");
+  const getInitialView = (): View => {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('cadyn_role');
+      if (role === 'attendee') return 'my-plan';
+      if (role === 'organizer') return 'trip-overview';
+    }
+    return 'trips';
+  };
+  const [currentView, setCurrentView] = useState<View>(getInitialView);
   const [isOrganizer] = useState(true);
   const [selectedHousehold, setSelectedHousehold] = useState<Household | null>(null);
   const [selectedItemType, setSelectedItemType] = useState<"flights" | "hotel" | "insurance" | "activity" | null>(null);
@@ -332,6 +340,7 @@ export function CadynApp() {
             itemType={selectedItemType!}
             onBack={handleBackFromDetail}
             onUpdateRequiredTaskStatus={updateRequiredTaskStatus}
+            onNavigateToGroup={handleGroupSelect}
           />
         );
       case "household-detail":
@@ -348,6 +357,7 @@ export function CadynApp() {
             itemType={(selectedGroupId as "flights" | "hotel" | "insurance" | "activity") ?? "flights"}
             onBack={handleBackFromDetail}
             onUpdateRequiredTaskStatus={updateRequiredTaskStatus}
+            onNavigateToGroup={handleGroupSelect}
           />
         );
       default:

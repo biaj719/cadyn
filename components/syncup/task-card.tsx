@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "./status-badge";
 import type { Task } from "@/lib/mock-data";
-import { Plane, Building2, Shield, ChevronRight, Check } from "lucide-react";
+import { Plane, BedDouble, Shield, Compass, Check } from "lucide-react";
 
 interface TaskCardProps {
   task: Task;
@@ -14,9 +14,10 @@ interface TaskCardProps {
 
 const categoryIcons = {
   flights: Plane,
-  hotel: Building2,
+  hotel: BedDouble,
   insurance: Shield,
-  other: ChevronRight,
+  activity: Compass,
+  other: Compass,
 };
 
 export function TaskCard({ task, onAction, showAction = true }: TaskCardProps) {

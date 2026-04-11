@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Home, CheckSquare, Users, PiggyBank, Activity, Menu, X, Bell, Settings, LogOut, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CadynLogo } from "@/components/cadyn-logo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type View = 
   | "trips" 
@@ -36,6 +36,17 @@ const mainNav = [
 
 export function AppShell({ children, currentView, onNavigate, tripName }: AppShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userRole, setUserRole] = useState<string>('attendee');
+
+  useEffect(() => {
+    const role = localStorage.getItem('cadyn_role') || 'attendee';
+    setUserRole(role);
+  }, []);
+
+  const visibleNav = mainNav.filter((item) => {
+    if (item.id === 'activity') return false;
+    return true;
+  });
 
   const handleSignOut = async () => {
     const { createBrowserClient } = await import('@supabase/ssr');
@@ -63,13 +74,15 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
         {/* Trip context */}
         {tripName && (
           <div className="border-b border-border">
-            <button
-              type="button"
-              onClick={() => onNavigate("trips")}
-              className="px-4 py-2 w-full text-left hover:bg-muted/50 transition-colors"
-            >
-              <span className="text-xs text-muted-foreground">← Back to My Trips</span>
-            </button>
+            {userRole === 'organizer' && (
+              <button
+                type="button"
+                onClick={() => onNavigate("trips")}
+                className="px-4 py-2 w-full text-left hover:bg-muted/50 transition-colors"
+              >
+                <span className="text-xs text-muted-foreground">← Back to My Trips</span>
+              </button>
+            )}
             <div className="px-4 py-3">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">Current Trip</p>
               <p className="font-medium text-foreground mt-0.5 truncate">{tripName}</p>
@@ -83,7 +96,7 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
           <p className="px-3 py-2 text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-2">Navigation</p>
           
           <div className="space-y-1">
-            {mainNav.map((item) => {
+            {visibleNav.map((item) => {
               const isActive = currentView === item.id;
               return (
                 <button
@@ -109,35 +122,46 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
                 </button>
               );
             })}
+            {userRole === 'organizer' && (
+              <button
+                type="button"
+                onClick={() => onNavigate("trip-settings")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  currentView === 'build-trip'
+                    ? "bg-[#E6F0EC] text-[#2E2A26]"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: '#E6E2DC', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Settings size={14} color="#5C5347" />
+                </div>
+                Configure Trip
+              </button>
+            )}
           </div>
         </nav>
 
         {/* Divider */}
         <div style={{ height: '1px', backgroundColor: '#EDE8E0', margin: '0 12px' }} />
 
-        {/* Trip Actions Section */}
-        <div className="px-3 py-3">
-          <p className="px-3 py-2 text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-2">Trip Actions</p>
-          
-          <div className="space-y-1">
-            <button
-              type="button"
-              onClick={() => onNavigate("trip-settings")}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            >
-              <Settings className="h-4 w-4" />
-              Configure Trip
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate("manage-profile")}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            >
-              <Users className="h-4 w-4" />
-              Manage Profile
-            </button>
+        {/* Trip Actions Section — organizers only */}
+        {userRole === 'organizer' && (
+          <div className="px-3 py-3">
+            <p className="px-3 py-2 text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-2">Trip Actions</p>
+
+            <div className="space-y-1">
+              <button
+                type="button"
+                onClick={() => onNavigate("manage-profile")}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+              >
+                <Users className="h-4 w-4" />
+                Manage Profile
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Notification bell - desktop */}
         <div className="border-t border-border px-3 py-3">
@@ -204,21 +228,23 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
               <Bell className="h-5 w-5" />
               <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary" />
             </Button>
-            <Button 
-              type="button"
-              variant="ghost" 
-              size="icon" 
-              className="h-9 w-9"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+            {userRole === 'organizer' && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            )}
           </div>
         </div>
       </header>
 
       {/* Mobile menu overlay */}
-      {mobileMenuOpen && (
+      {userRole === 'organizer' && mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
           <div 
             className="absolute top-14 right-0 w-64 shadow-xl h-[calc(100vh-3.5rem)] overflow-y-auto"
@@ -388,7 +414,7 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
       {/* Mobile bottom navigation */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[200]" style={{ backgroundColor: '#F5F2EC', borderTop: '1px solid #E6DED3' }}>
         <div className="flex items-center justify-around py-2">
-          {mainNav.map((item) => {
+          {visibleNav.map((item) => {
             const isActive = currentView === item.id;
             return (
               <button
@@ -414,6 +440,18 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
               </button>
             );
           })}
+          <button
+            onClick={handleSignOut}
+            style={{
+              background: 'none', border: 'none',
+              fontSize: '12px', color: '#8A847C',
+              cursor: 'pointer', padding: '12px',
+              textAlign: 'center',
+              fontFamily: 'inherit',
+            }}
+          >
+            Sign out
+          </button>
         </div>
       </nav>
 

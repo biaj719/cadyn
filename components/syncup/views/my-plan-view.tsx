@@ -17,13 +17,14 @@ import {
 import { 
   Check,
   Plane,
-  Building2,
+  BedDouble,
   Shield,
   Anchor,
   MessageCircle,
   ClipboardCheck,
-  Sparkles,
+  Compass,
   CheckSquare,
+  Sparkles,
 } from "lucide-react";
 
 interface MyPlanViewProps {
@@ -39,7 +40,7 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
       case "flights":
         return <Plane className="h-5 w-5 text-foreground" />;
       case "hotel":
-        return <Building2 className="h-5 w-5 text-foreground" />;
+        return <BedDouble className="h-5 w-5 text-foreground" />;
       case "insurance":
         return <Shield className="h-5 w-5 text-foreground" />;
       case "activity":
@@ -104,23 +105,83 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
     },
   ];
 
+  const userRole = typeof window !== 'undefined' ? localStorage.getItem('cadyn_role') || 'attendee' : 'attendee';
+
   return (
     <div>
       <PageTitle
         icon={<CheckSquare size={22} color="#8A847C" />}
         title="My Plan"
-        subtitle="Track your trip preparation"
+        subtitle={userRole === 'organizer' ? "You're organizing this trip" : "Organized by Bianca"}
       />
       <PageContent>
-          
+
+          {/* What's Coming */}
+          <div style={{ marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '14px' }}>
+              <Compass size={13} color="#8A847C" />
+              <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#8A847C' }}>
+                What's Coming
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {commitments.map((c: any) => {
+                const goingCount = 2; // mock
+                const totalCount = 4; // mock
+                return (
+                  <div key={c.id} style={{
+                    background: '#FFFCF8',
+                    border: '1px solid #E6DED3',
+                    borderRadius: '12px',
+                    padding: '18px 20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    cursor: 'pointer',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+                  }}
+                  onClick={() => onTaskSelect?.({
+                    id: c.id || 'activity',
+                    category: 'activity',
+                    title: c.title,
+                    description: c.description || '',
+                    status: 'not-started',
+                  })}
+                  >
+                    <div style={{
+                      width: '44px', height: '44px', borderRadius: '9px',
+                      background: '#E3EFE9', display: 'flex',
+                      alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      <Compass size={20} color="#2F6F5A" />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '16px', fontWeight: 600, color: '#1F1F1F', marginBottom: '2px' }}>{c.title}</div>
+                      <div style={{ fontSize: '13px', color: '#8A847C' }}>
+                        {c.date} · {goingCount} of {totalCount} going
+                      </div>
+                    </div>
+                    <div style={{
+                      fontSize: '11px', fontWeight: 500, padding: '3px 10px',
+                      borderRadius: '99px', background: '#E3EFE9', color: '#2F6F5A',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {goingCount} going
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Your Next Step - PRIMARY CARD */}
           <div className="apple-card" style={{ padding: '24px', boxShadow: shadows.md, overflow: 'visible' }}>
             <div className="flex items-start gap-4">
               <div className="apple-icon-container" style={{ alignSelf: 'flex-start', marginTop: '4px', flexShrink: 0 }}>
-                {getCategoryIcon(nextStep.category)}
+                <Sparkles size={22} color="#2F6F5A" />
               </div>
               <div className="flex-1 min-w-0">
-                <p style={{ ...textRoles.label, marginBottom: spacing['4'] }}>Your Next Step</p>
+                <p style={{ ...textRoles.label, marginBottom: spacing['4'] }}>{userRole === 'organizer' ? "NEXT STEP FOR YOUR GROUP" : "YOUR NEXT STEP"}</p>
                 <h3 style={{ ...textRoles.title, marginBottom: spacing['4'] }}>{nextStep.title}</h3>
                 <p style={{ ...textRoles.body, marginBottom: spacing['4'] }}>Trip protection coverage · Jun 15–22</p>
                 <p style={{ ...textRoles.body, marginBottom: spacing['7'] }}>{getProgressMessage(pendingTasks.length, requiredTasks.length)}</p>
@@ -147,7 +208,7 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
               <ClipboardCheck size={14} color="#8E8E93" />
               <span style={{ ...textRoles.label }}>
-                Required
+                Essentials
               </span>
             </div>
 
@@ -178,13 +239,18 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                          <span style={{
-                            ...textRoles.title,
-                            flex: 1,
-                            minWidth: 0
-                          }}>
-                            {task.title}
-                          </span>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <span style={{
+                              ...textRoles.title,
+                            }}>
+                              {task.title}
+                            </span>
+                            {userRole === 'attendee' && (
+                              <div style={{ fontSize: '10px', color: '#8A847C', marginTop: '2px' }}>
+                                Required · Set by organizer
+                              </div>
+                            )}
+                          </div>
                           {isDone ? (
                             <div style={{ ...getBadgeStyle('done'), flexShrink: 0, alignSelf: 'center' }}>
                               <Check className="h-3 w-3" />
@@ -314,9 +380,9 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
           <section style={{ marginBottom: '28px' }}>
             {/* Section header — outside the tint */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-              <Sparkles size={14} color="#8E8E93" />
+              <Compass size={14} color="#8E8E93" />
               <span style={{ ...textRoles.label }}>
-                Optional
+                Experiences
               </span>
             </div>
 
@@ -334,29 +400,35 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
                     display: 'flex',
                     flexDirection: 'column'
                   }}
-                  onClick={() => onNavigate?.("activity")}
+                  onClick={() => onTaskSelect?.({
+                    id: commitment.id || 'activity',
+                    category: 'activity',
+                    title: commitment.title,
+                    description: commitment.description || '',
+                    status: 'not-started',
+                  })}
                 >
                   {/* Row 1: Icon + Title + Status */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                     <div style={{ flexShrink: 0, marginTop: '4px', alignSelf: 'flex-start' }} className="apple-icon-container">
-                      {commitment.going ? (
-                        <Check className="h-4 w-4 text-green-600" />
-                      ) : (
-                        <span style={{ fontSize: '18px', color: colors.textMutedLight }}>✕</span>
-                      )}
+                      <Compass size={16} color="#6F6A63" />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                        <span style={{ 
-                          fontSize: '15px', 
-                          fontWeight: 600, 
-                          color: '#1A1A1A', 
-                          lineHeight: 1.3,
-                          flex: 1,
-                          minWidth: 0
-                        }}>
-                          {commitment.title}
-                        </span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{
+                            fontSize: '15px',
+                            fontWeight: 600,
+                            color: '#1A1A1A',
+                            lineHeight: 1.3,
+                            display: 'block',
+                          }}>
+                            {commitment.title}
+                          </span>
+                          <span style={{ fontSize: '12px', color: '#8A847C' }}>
+                            2 of 4 people going · 2 waiting
+                          </span>
+                        </div>
                         <span style={{ ...getBadgeStyle(commitment.going ? 'done' : 'progress'), flexShrink: 0, alignSelf: 'center' }}>
                           {commitment.going ? "Going" : "Not going"}
                         </span>

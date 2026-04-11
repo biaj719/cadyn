@@ -7,8 +7,8 @@ import { StatusBadge } from "../status-badge";
 import type { Task, Household } from "@/lib/mock-data";
 import { mockTrip } from "@/lib/mock-data";
 import { 
-  Plane, 
-  Building2, 
+  Plane,
+  BedDouble,
   Shield, 
   CheckCircle2, 
   Clock, 
@@ -40,7 +40,7 @@ const categoryConfig = {
     ],
   },
   hotel: {
-    icon: Building2,
+    icon: BedDouble,
     label: "Hotel",
     tips: [
       "Check if the resort has group rates",

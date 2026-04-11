@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "../page-header";
 import { mockTrip } from "@/lib/mock-data";
-import { Plane, Building2, Shield, CheckCircle2, Clock, Circle } from "lucide-react";
+import { Plane, BedDouble, Compass, Shield, CheckCircle2, Clock, Circle } from "lucide-react";
 
 // Aggregate task data by category
 function getTasksByCategory() {
@@ -32,7 +32,7 @@ function getTasksByCategory() {
 
 const categoryConfig = {
   flights: { label: "Flights", icon: Plane },
-  hotel: { label: "Hotel", icon: Building2 },
+  hotel: { label: "Hotel", icon: BedDouble },
   insurance: { label: "Travel Insurance", icon: Shield },
 };
 

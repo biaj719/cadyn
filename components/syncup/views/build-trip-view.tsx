@@ -140,6 +140,9 @@ export function BuildTripView({ onBack, isOrganizer = true }: BuildTripViewProps
           paddingBottom: spacing['12'],
         }}
       >
+        <p style={{ fontSize: '13px', color: '#8A847C', marginBottom: '20px' }}>
+          These tasks define what your group needs to complete before the trip.
+        </p>
         <div style={{ display: "flex", flexDirection: "column", gap: spacing['12'] }}>
           {/* TRIP BASICS */}
           <section>
