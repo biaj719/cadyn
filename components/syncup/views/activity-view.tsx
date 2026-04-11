@@ -47,7 +47,15 @@ export function ActivityView({ onNavigateToItem, onNavigateToGroup, onNavigateTo
     if (activity.message.includes("budget") || activity.message.includes("split")) {
       return { type: "wallet" };
     }
-    return null;
+    // Fallback — navigate to wallet for payment activities,
+    // group detail for group activities, overview for others
+    if (activity.householdName) {
+      const household = mockTrip.households.find(
+        (h: any) => h.name === activity.householdName
+      );
+      if (household) return { type: 'group', id: household.id };
+    }
+    return { type: 'wallet', id: null };
   };
 
   const handleActivityClick = (activity: any) => {
@@ -87,8 +95,9 @@ export function ActivityView({ onNavigateToItem, onNavigateToGroup, onNavigateTo
                 padding: spacing['4'],
                 borderBottom: index < items.length - 1 ? `1px solid ${colors.divider}` : 'none',
                 cursor: 'pointer',
+                borderRadius: index === 0 ? '12px 12px 0 0' : index === items.length - 1 ? '0 0 12px 12px' : '0',
               }}
-              className="hover:bg-muted/20 transition-colors"
+              className="hover:bg-muted/30 active:bg-muted/50 transition-colors"
             >
               <ActivityItem activity={activity} isNew={false} />
             </div>
@@ -109,8 +118,8 @@ export function ActivityView({ onNavigateToItem, onNavigateToGroup, onNavigateTo
         {isEmpty ? (
           <div style={{
             textAlign: 'center',
-            paddingTop: spacing['20'],
-            paddingBottom: spacing['20'],
+            paddingTop: '80px',
+            paddingBottom: '80px',
           }}>
             <Users
               size={48}

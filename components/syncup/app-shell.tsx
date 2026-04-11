@@ -37,6 +37,16 @@ const mainNav = [
 export function AppShell({ children, currentView, onNavigate, tripName }: AppShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleSignOut = async () => {
+    const { createBrowserClient } = await import('@supabase/ssr');
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    await supabase.auth.signOut();
+    window.location.href = '/login';
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Desktop sidebar */}
@@ -144,26 +154,18 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
           </Button>
         </div>
 
-        <div className="px-3 pb-3">
+        <div style={{ borderTop: '1px solid #E6DED3', padding: '12px 8px 8px', marginTop: 'auto' }}>
           <button
             type="button"
-            onClick={async () => {
-              const { createBrowserClient } = await import('@supabase/ssr');
-              const supabase = createBrowserClient(
-                process.env.NEXT_PUBLIC_SUPABASE_URL!,
-                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-              );
-              await supabase.auth.signOut();
-              window.location.href = '/login';
-            }}
+            onClick={handleSignOut}
             style={{
               width: '100%',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
+              gap: '8px',
               padding: '8px 12px',
               borderRadius: '8px',
-              fontSize: '13px',
+              fontSize: '12px',
               fontWeight: 500,
               color: '#8A847C',
               background: 'none',
@@ -171,12 +173,14 @@ export function AppShell({ children, currentView, onNavigate, tripName }: AppShe
               cursor: 'pointer',
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
             Sign out
           </button>
         </div>
-
-        {/* Organizer indicator removed - capabilities integrated into screens */}
       </aside>
 
       {/* Mobile header */}

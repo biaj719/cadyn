@@ -30,9 +30,10 @@ interface MyPlanViewProps {
   onTaskSelect?: (task: { id: string; category: string; title: string; description: string; status: string }) => void;
   getRequiredTaskStatus?: (task: any) => string;
   getActivityResponse?: (id: string) => string;
+  onNavigate?: (view: string) => void;
 }
 
-export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityResponse }: MyPlanViewProps) {
+export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityResponse, onNavigate }: MyPlanViewProps) {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "flights":
@@ -333,7 +334,7 @@ export function MyPlanView({ onTaskSelect, getRequiredTaskStatus, getActivityRes
                     display: 'flex',
                     flexDirection: 'column'
                   }}
-                  onClick={() => onNavigate?.(commitment.id)}
+                  onClick={() => onNavigate?.("activity")}
                 >
                   {/* Row 1: Icon + Title + Status */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>

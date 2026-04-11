@@ -27,45 +27,45 @@ interface AttentionItem {
 
 interface NotificationsViewProps {
   onMarkAsRead?: (id: string) => void;
+  onNavigate?: (view: string) => void;
 }
 
-// Mock attention items - only high-signal, action-oriented items
-const mockAttentionItems: AttentionItem[] = [
-  {
-    id: "1",
-    type: "action-needed",
-    title: "You still need to book your flight",
-    description: "Booking deadline is Jun 10. Prices are rising.",
-    urgency: "high",
-    cta: { label: "Book now", onClick: () => {} },
-  },
-  {
-    id: "2",
-    type: "deadline",
-    title: "Travel insurance deadline in 2 weeks",
-    description: "Coverage needed by Jun 8 for full protection.",
-    urgency: "high",
-    cta: { label: "Review", onClick: () => {} },
-  },
-  {
-    id: "3",
-    type: "nudge",
-    title: "Bianca nudged you about flights",
-    description: "She's waiting on your confirmation.",
-    urgency: "medium",
-    cta: { label: "View details", onClick: () => {} },
-  },
-  {
-    id: "4",
-    type: "discussion",
-    title: "3 new messages in Flights discussion",
-    description: "Group decided on new departure time.",
-    urgency: "medium",
-    cta: { label: "View", onClick: () => {} },
-  },
-];
-
-export function NotificationsView({ onMarkAsRead }: NotificationsViewProps) {
+export function NotificationsView({ onMarkAsRead, onNavigate }: NotificationsViewProps) {
+  // Mock attention items - only high-signal, action-oriented items
+  const mockAttentionItems: AttentionItem[] = [
+    {
+      id: "1",
+      type: "action-needed",
+      title: "You still need to book your flight",
+      description: "Booking deadline is Jun 10. Prices are rising.",
+      urgency: "high",
+      cta: { label: "Book now", onClick: () => onNavigate?.("my-plan") },
+    },
+    {
+      id: "2",
+      type: "deadline",
+      title: "Travel insurance deadline in 2 weeks",
+      description: "Coverage needed by Jun 8 for full protection.",
+      urgency: "high",
+      cta: { label: "Review", onClick: () => onNavigate?.("my-plan") },
+    },
+    {
+      id: "3",
+      type: "nudge",
+      title: "Bianca nudged you about flights",
+      description: "She's waiting on your confirmation.",
+      urgency: "medium",
+      cta: { label: "View details", onClick: () => onNavigate?.("my-plan") },
+    },
+    {
+      id: "4",
+      type: "discussion",
+      title: "3 new messages in Flights discussion",
+      description: "Group decided on new departure time.",
+      urgency: "medium",
+      cta: { label: "View", onClick: () => onNavigate?.("my-plan") },
+    },
+  ];
   const [dismissedItems, setDismissedItems] = useState<Set<string>>(new Set());
 
   const visibleItems = mockAttentionItems.filter(item => !dismissedItems.has(item.id));
@@ -114,7 +114,7 @@ export function NotificationsView({ onMarkAsRead }: NotificationsViewProps) {
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            marginTop: spacing['0.5'],
+            marginTop: '2px',
           }}
         >
           <Icon size={18} color={config.text} />
@@ -179,8 +179,8 @@ export function NotificationsView({ onMarkAsRead }: NotificationsViewProps) {
         {visibleItems.length === 0 ? (
           <div style={{
             textAlign: 'center',
-            paddingTop: spacing['20'],
-            paddingBottom: spacing['20'],
+            paddingTop: '80px',
+            paddingBottom: '80px',
           }}>
             <AlertCircle
               size={48}

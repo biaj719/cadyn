@@ -67,17 +67,17 @@ export function PrimaryCard({
         <div style={{
           backgroundColor: colors.iconContainerBg,
           borderRadius: borderRadius.lg,
-          padding: '8px',
+          padding: '10px',
           flexShrink: 0,
           alignSelf: 'flex-start',
           marginTop: '4px',
-          width: '40px',
-          height: '40px',
+          width: '48px',
+          height: '48px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <div style={{ transform: 'scale(1.1)' }}>
+          <div style={{ transform: 'scale(1.3)' }}>
             {icon}
           </div>
         </div>

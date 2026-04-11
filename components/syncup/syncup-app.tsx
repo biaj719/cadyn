@@ -277,19 +277,18 @@ export function CadynApp() {
       case "trip-overview":
         return <TripOverviewView
           onHouseholdSelect={handleHouseholdSelect}
-          onItemSelect={handleItemSelect}
           getRequiredTaskStatus={getRequiredTaskStatus}
           getActivityResponse={getActivityResponse}
-          updateActivityResponse={updateActivityResponse}
           onNavigate={handleNavigate}
           onBack={handleBackToTrips}
           onTaskSelect={handleTaskSelect}
         />;
       case "my-plan":
-        return <MyPlanView 
-          onTaskSelect={handleTaskSelect}
+        return <MyPlanView
+          onTaskSelect={handleTaskSelect as (task: { id: string; category: string; title: string; description: string; status: string }) => void}
           getRequiredTaskStatus={getRequiredTaskStatus}
           getActivityResponse={getActivityResponse}
+          onNavigate={handleNavigate}
         />;
       case "groups":
         return <GroupsView 
@@ -311,18 +310,13 @@ export function CadynApp() {
           />
         );
       case "notifications":
-        return <NotificationsView 
-          activityFeed={activityFeed}
+        return <NotificationsView
           onMarkAsRead={(id) => {
-            setActivityFeed(prev => 
+            setActivityFeed(prev =>
               prev.map(item => item.id === id ? { ...item, read: true } : item)
             );
           }}
-          onMarkAllAsRead={() => {
-            setActivityFeed(prev => 
-              prev.map(item => ({ ...item, read: true }))
-            );
-          }}
+          onNavigate={handleNavigate}
         />;
       case "build-trip":
         return (
@@ -334,30 +328,26 @@ export function CadynApp() {
       case "item-detail":
         return (
           <SharedDetailView
-            itemType={selectedItemType}
+            itemId={selectedItemType!}
+            itemType={selectedItemType!}
             onBack={handleBackFromDetail}
-            onNavigateToGroup={handleGroupSelect}
-            requiredTaskStates={requiredTaskStates}
-            updateRequiredTaskStatus={updateRequiredTaskStatus}
+            onUpdateRequiredTaskStatus={updateRequiredTaskStatus}
           />
         );
       case "household-detail":
         return (
           <HouseholdDetailView
-            household={selectedHousehold}
+            household={selectedHousehold!}
             onBack={handleBackFromDetail}
-            getActivityResponse={getActivityResponse}
-            updateActivityResponse={updateActivityResponse}
           />
         );
       case "group-detail":
         return (
           <SharedDetailView
-            itemType={selectedGroupId}
+            itemId={selectedGroupId!}
+            itemType={(selectedGroupId as "flights" | "hotel" | "insurance" | "activity") ?? "flights"}
             onBack={handleBackFromDetail}
-            onNavigateToGroup={handleGroupSelect}
-            requiredTaskStates={requiredTaskStates}
-            updateRequiredTaskStatus={updateRequiredTaskStatus}
+            onUpdateRequiredTaskStatus={updateRequiredTaskStatus}
           />
         );
       default:

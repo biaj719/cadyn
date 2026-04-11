@@ -19,6 +19,12 @@ export function WalletView() {
   const [paymentType, setPaymentType] = useState<'task' | 'oneoff'>('task');
   const [linkedTask, setLinkedTask] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'paid' | 'unsettled'>('all');
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const showSuccess = (msg: string) => {
+    setSuccessMessage(msg);
+    setTimeout(() => setSuccessMessage(null), 2500);
+  };
 
   const savings = getCurrentUserSavings();
   const daysUntilTrip = getDaysUntilTrip(mockTrip.startDate);
@@ -194,7 +200,7 @@ export function WalletView() {
               return true;
             })
             .map(payment => (
-            <div key={payment.id} onClick={() => alert(`${payment.title}\nTotal: $${payment.total}\nPaid by: ${payment.paidBy}\nSplit between: ${payment.splitBetween}`)} style={{ ...s.card, cursor: 'pointer' }}>
+            <div key={payment.id} style={{ ...s.card, cursor: 'pointer' }}>
               <div style={{ fontSize: '14px', fontWeight: 600, color: colors.textPrimary, marginBottom: '3px' }}>{payment.title}</div>
               <div style={{ fontSize: '12px', color: colors.textMuted, marginBottom: '12px' }}>
                 Paid by {payment.paidBy} · Split between {payment.splitBetween}
@@ -246,6 +252,20 @@ export function WalletView() {
         </div>
       </PageContent>
 
+      {successMessage && (
+        <div style={{
+          position: 'fixed', bottom: '90px', left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#1F1F1F', color: '#fff',
+          padding: '12px 20px', borderRadius: '12px',
+          fontSize: '13px', fontWeight: 500,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+          zIndex: 200, whiteSpace: 'nowrap',
+        }}>
+          {successMessage}
+        </div>
+      )}
+
       {showAddSavings && (
         <div style={{
           position: 'fixed', inset: 0,
@@ -287,7 +307,7 @@ export function WalletView() {
             <button
               onClick={() => {
                 if (savingsAmount && parseFloat(savingsAmount) > 0) {
-                  alert(`Added $${savingsAmount} to your Trip Fund!`);
+                  showSuccess(`Added $${savingsAmount} to your Trip Fund`);
                   setSavingsAmount('');
                   setSavingsNote('');
                   setShowAddSavings(false);
@@ -435,7 +455,7 @@ export function WalletView() {
                   ? linkedTask.replace(/-/g, ' ')
                   : paymentTitle;
                 if (label && paymentAmount && parseFloat(paymentAmount) > 0) {
-                  alert(`Payment recorded: ${label} — $${paymentAmount}`);
+                  showSuccess(`Payment recorded`);
                   setPaymentTitle('');
                   setPaymentAmount('');
                   setPaymentPaidBy('me');
@@ -492,7 +512,7 @@ export function WalletView() {
                   <div style={{ fontSize: '12px', color: '#8A847C' }}>owes you ${person.amount}</div>
                 </div>
                 <button
-                  onClick={() => alert(`Marked ${person.name} as settled`)}
+                  onClick={() => showSuccess(`${person.name} marked as settled`)}
                   style={{ padding: '7px 16px', background: '#E3EFE9', color: '#2F6F5A', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}
                 >
                   Mark paid
@@ -515,7 +535,7 @@ export function WalletView() {
                   <div style={{ fontSize: '12px', color: '#8A847C' }}>you owe ${person.amount}</div>
                 </div>
                 <button
-                  onClick={() => alert(`Recorded payment to ${person.name}`)}
+                  onClick={() => showSuccess(`Payment to ${person.name} recorded`)}
                   style={{ padding: '7px 16px', background: '#F6E7D8', color: '#8B4F1A', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}
                 >
                   Record payment

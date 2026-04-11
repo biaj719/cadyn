@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X, ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ManageProfilePanelProps {
@@ -10,76 +9,173 @@ interface ManageProfilePanelProps {
   onClose: () => void;
 }
 
+const fieldLabel: React.CSSProperties = {
+  fontSize: '11px',
+  fontWeight: 600,
+  letterSpacing: '0.07em',
+  textTransform: 'uppercase',
+  color: '#6F6A63',
+  display: 'block',
+  marginBottom: '6px',
+};
+
+const fieldInput: React.CSSProperties = {
+  width: '100%',
+  padding: '10px 14px',
+  borderRadius: '10px',
+  border: '1px solid #E6DED3',
+  fontSize: '14px',
+  background: '#F5F2EC',
+  color: '#1F1F1F',
+  outline: 'none',
+  boxSizing: 'border-box',
+};
+
+const sectionTitle: React.CSSProperties = {
+  fontSize: '11px',
+  fontWeight: 600,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: '#8A847C',
+  marginBottom: '12px',
+};
+
 export function ManageProfilePanel({ isOpen, onClose }: ManageProfilePanelProps) {
   const isMobile = useIsMobile();
-  
-  // Panel state for sub-actions
-  const [activeSubPanel, setActiveSubPanel] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState('Bianca');
+  const [email] = useState('biancabjones@gmail.com');
+  const [tripReminders, setTripReminders] = useState(true);
+  const [groupActivity, setGroupActivity] = useState(true);
+  const [saved, setSaved] = useState(false);
 
   if (!isOpen) return null;
 
-  // Grouped action rows with right chevrons
-  const AccountSection = () => (
-    <div className="space-y-3">
-      <ActionRow
-        title="Edit name"
-        subtitle="The Johnsons"
-        onClick={() => setActiveSubPanel("edit-name")}
-      />
-      <ActionRow
-        title="Change email"
-        subtitle="contact@thejohnsons.com"
-        onClick={() => setActiveSubPanel("change-email")}
-      />
-      <ActionRow
-        title="Change password"
-        onClick={() => setActiveSubPanel("change-password")}
-      />
-    </div>
-  );
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => {
+      setSaved(false);
+      onClose();
+    }, 1000);
+  };
 
-  const PreferencesSection = () => (
-    <div className="space-y-3">
-      <ActionRow
-        title="Notification settings"
-        subtitle="Email & Push"
-        onClick={() => setActiveSubPanel("notifications")}
-      />
-      <ActionRow
-        title="Activity preferences"
-        subtitle="Trip updates"
-        onClick={() => setActiveSubPanel("activity")}
-      />
-    </div>
-  );
+  const PanelContent = ({ padding }: { padding: string }) => (
+    <>
+      <div style={{ flex: 1, padding, display: 'flex', flexDirection: 'column', gap: '28px' }}>
+        {/* Account section */}
+        <div>
+          <p style={sectionTitle}>Account</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <label style={fieldLabel}>Display name</label>
+              <input
+                type="text"
+                value={displayName}
+                onChange={e => setDisplayName(e.target.value)}
+                style={fieldInput}
+              />
+            </div>
+            <div>
+              <label style={fieldLabel}>Email</label>
+              <input
+                type="email"
+                value={email}
+                readOnly
+                style={{ ...fieldInput, color: '#8A847C', cursor: 'not-allowed' }}
+              />
+              <p style={{ fontSize: '11px', color: '#8A847C', marginTop: '5px' }}>
+                Contact support to change your email address.
+              </p>
+            </div>
+          </div>
+        </div>
 
-  const SectionContainer = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div>
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 py-2 mb-2">
-        {title}
-      </p>
-      <div className="rounded-lg border border-border bg-white overflow-hidden divide-y divide-border">
-        {children}
+        {/* Preferences section */}
+        <div>
+          <p style={sectionTitle}>Preferences</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+            <label style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '14px 0', borderBottom: '1px solid #E6DED3', cursor: 'pointer',
+            }}>
+              <div>
+                <p style={{ fontSize: '14px', fontWeight: 500, color: '#1F1F1F' }}>Trip reminders</p>
+                <p style={{ fontSize: '12px', color: '#8A847C', marginTop: '2px' }}>Deadlines and upcoming dates</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={tripReminders}
+                onChange={e => setTripReminders(e.target.checked)}
+                style={{ width: '18px', height: '18px', accentColor: '#3D5C50', cursor: 'pointer' }}
+              />
+            </label>
+            <label style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '14px 0', cursor: 'pointer',
+            }}>
+              <div>
+                <p style={{ fontSize: '14px', fontWeight: 500, color: '#1F1F1F' }}>Group activity</p>
+                <p style={{ fontSize: '12px', color: '#8A847C', marginTop: '2px' }}>When others complete tasks or add updates</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={groupActivity}
+                onChange={e => setGroupActivity(e.target.checked)}
+                style={{ width: '18px', height: '18px', accentColor: '#3D5C50', cursor: 'pointer' }}
+              />
+            </label>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Footer */}
+      <div style={{
+        borderTop: '1px solid #E6DED3',
+        padding: '16px 24px',
+        background: 'inherit',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+      }}>
+        <Button
+          onClick={handleSave}
+          style={{
+            flex: 1,
+            background: saved ? '#2F6F5A' : '#3D5C50',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '14px',
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+        >
+          {saved ? 'Saved ✓' : 'Save'}
+        </Button>
+        <button
+          onClick={onClose}
+          style={{
+            background: 'none',
+            border: 'none',
+            fontSize: '14px',
+            color: '#8A847C',
+            cursor: 'pointer',
+            padding: '8px',
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </>
   );
 
-  // Desktop: Slide-over from right
   if (!isMobile) {
     return (
       <>
-        {/* Backdrop */}
-        <div
-          className="fixed inset-0 bg-black/20 z-40 transition-opacity"
-          onClick={onClose}
-        />
-        
-        {/* Slide-over panel */}
+        <div className="fixed inset-0 bg-black/20 z-40 transition-opacity" onClick={onClose} />
         <div
           className="fixed right-0 top-0 bottom-0 w-96 bg-background shadow-lg z-50 overflow-y-auto flex flex-col"
-          style={{
-            animation: "slideIn 0.3s ease-out",
-          }}
+          style={{ animation: 'slideIn 0.3s ease-out' }}
         >
           <style>{`
             @keyframes slideIn {
@@ -87,51 +183,21 @@ export function ManageProfilePanel({ isOpen, onClose }: ManageProfilePanelProps)
               to { transform: translateX(0); }
             }
           `}</style>
-
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-background">
+          <div className="flex items-center p-6 border-b border-border sticky top-0 bg-background">
             <h2 className="text-lg font-semibold text-foreground">Manage Profile</h2>
-            <button
-              onClick={onClose}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
           </div>
-
-          {/* Content */}
-          <div className="flex-1 p-6 space-y-8">
-            <SectionContainer title="Account">
-              <AccountSection />
-            </SectionContainer>
-            <SectionContainer title="Preferences">
-              <PreferencesSection />
-            </SectionContainer>
-          </div>
-
-          {/* Footer */}
-          <div className="border-t border-border p-6 bg-background sticky bottom-0">
-            <Button variant="outline" onClick={onClose} className="w-full">
-              Done
-            </Button>
-          </div>
+          <PanelContent padding="24px" />
         </div>
       </>
     );
   }
 
-  // Mobile: Full-screen modal
   return (
     <>
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-      
-      {/* Full-screen modal */}
       <div
         className="fixed inset-0 z-50 bg-background overflow-y-auto flex flex-col"
-        style={{
-          animation: "slideUp 0.3s ease-out",
-        }}
+        style={{ animation: 'slideUp 0.3s ease-out' }}
       >
         <style>{`
           @keyframes slideUp {
@@ -139,61 +205,11 @@ export function ManageProfilePanel({ isOpen, onClose }: ManageProfilePanelProps)
             to { transform: translateY(0); }
           }
         `}</style>
-
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-background">
+        <div className="flex items-center p-4 border-b border-border sticky top-0 bg-background">
           <h2 className="text-lg font-semibold text-foreground">Manage Profile</h2>
-          <button
-            onClick={onClose}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
         </div>
-
-        {/* Content */}
-        <div className="flex-1 p-4 space-y-6">
-          <SectionContainer title="Account">
-            <AccountSection />
-          </SectionContainer>
-          <SectionContainer title="Preferences">
-            <PreferencesSection />
-          </SectionContainer>
-        </div>
-
-        {/* Footer */}
-        <div className="border-t border-border p-4 bg-background sticky bottom-0">
-          <Button variant="outline" onClick={onClose} className="w-full">
-            Done
-          </Button>
-        </div>
+        <PanelContent padding="16px" />
       </div>
     </>
-  );
-}
-
-// Reusable action row component
-function ActionRow({
-  title,
-  subtitle,
-  onClick,
-}: {
-  title: string;
-  subtitle?: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/50 transition-colors"
-    >
-      <div className="text-left">
-        <p className="text-sm font-medium text-foreground">{title}</p>
-        {subtitle && (
-          <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
-        )}
-      </div>
-      <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-    </button>
   );
 }

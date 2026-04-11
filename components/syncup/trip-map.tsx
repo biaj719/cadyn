@@ -23,7 +23,6 @@ export function TripMap({ pins, height = "240px" }: TripMapProps) {
 
     const L = require("leaflet");
 
-    // Fix default marker icons
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
@@ -34,19 +33,17 @@ export function TripMap({ pins, height = "240px" }: TripMapProps) {
     const map = L.map(mapRef.current, {
       zoomControl: false,
       attributionControl: false,
-      dragging: false,
+      dragging: true,
       scrollWheelZoom: false,
       doubleClickZoom: false,
-      touchZoom: false,
+      touchZoom: true,
     });
 
-    // Warm CartoDB Voyager tiles
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
       { maxZoom: 19 }
     ).addTo(map);
 
-    // Custom green pin
     const greenIcon = L.divIcon({
       className: "",
       html: `<div style="
@@ -87,6 +84,18 @@ export function TripMap({ pins, height = "240px" }: TripMapProps) {
       mapInstanceRef.current = null;
     };
   }, []);
+
+  // Invalidate size when height changes so tiles re-render
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      setTimeout(() => {
+        mapInstanceRef.current.invalidateSize();
+      }, 100);
+      setTimeout(() => {
+        mapInstanceRef.current.invalidateSize();
+      }, 400);
+    }
+  }, [height]);
 
   return (
     <>
